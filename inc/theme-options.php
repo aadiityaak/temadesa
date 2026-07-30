@@ -183,7 +183,10 @@ function temadesa_options_render_page()
 				   class="wp-desa__subnav-tab <?php echo $active_tab === 'carousel' ? 'is-active' : ''; ?>">
 					Carousel
 				</a>
-				<!-- Future tabs here -->
+				<a href="?page=temadesa-options&amp;tab=fitur-halaman"
+				   class="wp-desa__subnav-tab <?php echo $active_tab === 'fitur-halaman' ? 'is-active' : ''; ?>">
+					Fitur Halaman
+				</a>
 			</nav>
 		</div>
 
@@ -196,8 +199,10 @@ function temadesa_options_render_page()
 				<div class="wp-desa-card" style="flex:1;max-width:800px;">
 					<?php
 					if ($active_tab === 'carousel') {
-						temadesa_options_render_carousel_tab();
-					}
+					temadesa_options_render_carousel_tab();
+				} elseif ($active_tab === 'fitur-halaman') {
+					temadesa_options_render_fitur_halaman_tab();
+				}
 					?>
 				</div>
 
@@ -215,6 +220,79 @@ function temadesa_options_render_page()
 				</div>
 
 			</div>
+		</form>
+	</div>
+	<?php
+}
+
+/**
+ * Render Fitur Halaman tab — list feature pages + generate button.
+ */
+function temadesa_options_render_fitur_halaman_tab()
+{
+	$features = temadesa_get_feature_pages();
+
+	// Handle generate action.
+	$generated = [];
+	if (isset($_POST['temadesa_generate']) && check_admin_referer('temadesa_generate_pages')) {
+		$generated = temadesa_generate_feature_pages();
+	}
+	?>
+	<div class="wp-desa-tab-content">
+		<p class="wp-desa-helper" style="margin-bottom:var(--sp-xl);">
+			Halaman fitur website yang tersedia. Klik <strong>Generate Halaman</strong> untuk membuat halaman
+			yang belum ada secara otomatis. Setiap halaman akan berisi shortcode fitur WP-Desa.
+		</p>
+
+		<?php if (!empty($generated)) : ?>
+		<div class="notice notice-success inline" style="margin:0 0 var(--sp-md);">
+			<p><?php printf('Berhasil membuat %d halaman baru.', count($generated)); ?></p>
+		</div>
+		<?php endif; ?>
+
+		<div class="wp-desa-card" style="padding:0;overflow:hidden;">
+			<table class="widefat" style="border:0;">
+				<thead>
+					<tr>
+						<th style="width:36px;"></th>
+						<th>Fitur</th>
+						<th>Keterangan</th>
+						<th>Halaman</th>
+						<th>Shortcode</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($features as $key => $feat) :
+						$page_id = temadesa_page_exists($feat['slug']);
+					?>
+					<tr>
+						<td>
+							<span class="dashicons dashicons-<?php echo $page_id ? 'yes-alt' : 'marker'; ?>"
+								  style="color:<?php echo $page_id ? '#22c55e' : '#f59e0b'; ?>"></span>
+						</td>
+						<td><strong><?php echo esc_html($feat['title']); ?></strong></td>
+						<td style="color:#666;font-size:13px;"><?php echo esc_html($feat['desc']); ?></td>
+						<td>
+							<?php if ($page_id) : ?>
+								<a href="<?php echo esc_url(get_edit_post_link($page_id)); ?>" target="_blank">
+									<?php echo esc_html(get_the_title($page_id)); ?> &rarr;
+								</a>
+							<?php else : ?>
+								<span style="color:#f59e0b;">Belum dibuat</span>
+							<?php endif; ?>
+						</td>
+						<td><code><?php echo esc_html($feat['shortcode']); ?></code></td>
+					</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+
+		<form method="post" action="" style="margin-top:var(--sp-md);">
+			<?php wp_nonce_field('temadesa_generate_pages'); ?>
+			<button type="submit" name="temadesa_generate" class="wp-desa-btn wp-desa-btn-primary">
+				<span class="dashicons dashicons-update"></span> Generate Halaman
+			</button>
 		</form>
 	</div>
 	<?php

@@ -209,6 +209,9 @@ get_header();
 	});
 	</script>
 
+	<!-- ========== FITUR / LAYANAN ========== -->
+	<?php temadesa_render_feature_grid(); ?>
+
 	<!-- ========== STATISTIK ========== -->
 	<?php if (shortcode_exists('wp_desa_statistik')) : ?>
 	<section class="desa-section desa-section-stats py-5">

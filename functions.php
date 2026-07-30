@@ -12,6 +12,9 @@ defined('ABSPATH') || exit;
 // Load unified Tema Desa Options (admin page).
 require_once get_stylesheet_directory() . '/inc/theme-options.php';
 
+// Load feature pages config & helpers.
+require_once get_stylesheet_directory() . '/inc/feature-pages.php';
+
 /**
  * Enqueue parent and child theme styles.
  * Parent styles are already enqueued by wsbase_scripts().
