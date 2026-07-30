@@ -688,24 +688,134 @@
   line-height: 1.3;
 }
 
-/* --- Kades --- */
-.desa-section-kades {
-  background: linear-gradient(
-    135deg,
-    var(--desa-primary-dark) 0%,
-    var(--desa-primary) 100%
-  );
-}
-.desa-section-kades .desa-section-title {
-  color: #fff;
-}
-
 /* --- Map --- */
 .desa-section-map iframe,
 .desa-section-map .wp-desa-peta-wrapper {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Peta & Lokasi --- */
+.desa-lokasi-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.desa-lokasi-table tr {
+  border-bottom: 1px solid var(--desa-hairline, #e5e7eb);
+}
+.desa-lokasi-table tr:last-child {
+  border-bottom: none;
+}
+.desa-lokasi-table td {
+  padding: 12px 4px;
+  vertical-align: top;
+  font-size: 0.9rem;
+}
+.desa-lokasi-icon {
+  width: 28px;
+  color: var(--desa-primary, #024ad8);
+  vertical-align: middle !important;
+  padding-right: 8px !important;
+}
+.desa-lokasi-table strong {
+  display: block;
+  color: var(--desa-ink, #111);
+  font-weight: 600;
+  font-size: 0.82rem;
+  margin-bottom: 2px;
+}
+.desa-lokasi-table .text-muted {
+  font-size: 0.9rem;
+}
+
+/* --- Blog / Artikel --- */
+.desa-section-blog {
+  background: #fff;
+}
+.desa-blog-card {
+  background: #fff;
+  border: 1px solid var(--desa-hairline, #e5e7eb);
+  border-radius: 16px;
+  overflow: hidden;
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+.desa-blog-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+.desa-blog-thumb {
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.desa-blog-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.desa-blog-card:hover .desa-blog-thumb img {
+  transform: scale(1.05);
+}
+.desa-blog-thumb-placeholder {
+  height: 100%;
+}
+.desa-blog-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.desa-blog-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.82rem;
+}
+.desa-blog-date {
+  color: var(--desa-muted, #6b7280);
+}
+.desa-blog-cat {
+  background: var(--desa-primary-soft, #c9e0fc);
+  color: var(--desa-primary, #024ad8);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+.desa-blog-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+.desa-blog-title a {
+  color: var(--desa-ink, #111);
+  text-decoration: none;
+}
+.desa-blog-title a:hover {
+  color: var(--desa-primary, #024ad8);
+}
+.desa-blog-excerpt {
+  font-size: 0.88rem;
+  color: var(--desa-body, #374151);
+  flex: 1;
+  margin-bottom: 12px;
+}
+.desa-blog-readmore {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--desa-primary, #024ad8);
+  text-decoration: none;
+}
+.desa-blog-readmore:hover {
+  text-decoration: underline;
 }
 
 /* --- Ringkasan 3 Cards --- */
@@ -899,109 +1009,6 @@
   font-weight: 400;
   font-size: 0.8em;
   color: var(--desa-muted, #6b7280);
-}
-
-/* --- Aparat Desa Carousel --- */
-.desa-section-aparat {
-  background: #fff;
-}
-.wp-desa-carousel-wrapper {
-  padding: 10px 48px !important;
-}
-.wp-desa-carousel-track {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  padding: 10px 4px !important;
-  scroll-snap-type: x mandatory;
-}
-.wp-desa-carousel-track::-webkit-scrollbar {
-  display: none;
-}
-.wp-desa-carousel-track > div {
-  flex: 0 0 250px;
-  scroll-snap-align: start;
-  background: #fff;
-  border: 1px solid var(--desa-hairline, #e5e7eb);
-  border-radius: 16px;
-  padding: 32px 24px 28px !important;
-  text-align: center;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-.wp-desa-carousel-track > div:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-  border-color: var(--desa-primary, #024ad8);
-}
-.wp-desa-carousel-track > div img {
-  width: 96px !important;
-  height: 96px !important;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto 16px !important;
-  display: block;
-  border: 3px solid var(--desa-surface-soft, #f8f9fa);
-  transition: border-color 0.25s ease;
-}
-.wp-desa-carousel-track > div:hover img {
-  border-color: var(--desa-primary-soft, #c9e0fc);
-}
-.wp-desa-carousel-track > div > div:nth-child(2) {
-  font-weight: 600;
-  font-size: 1.05em !important;
-  color: var(--desa-ink, #111);
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-.wp-desa-carousel-track > div > div:nth-child(3) {
-  font-size: 0.85em !important;
-  font-weight: 500;
-  color: var(--desa-primary, #024ad8);
-}
-.wp-desa-carousel-track > div > div:nth-child(4) {
-  font-size: 0.8em;
-  color: var(--desa-muted, #6b7280);
-  margin-top: 6px;
-}
-.wp-desa-carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50%;
-  border: 1px solid var(--desa-hairline, #e5e7eb) !important;
-  background: #fff !important;
-  cursor: pointer;
-  font-size: 20px !important;
-  line-height: 1;
-  z-index: 2;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-  color: var(--desa-body, #374151);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    box-shadow 0.2s;
-}
-.wp-desa-carousel-btn:hover {
-  background: var(--desa-primary, #024ad8) !important;
-  color: #fff !important;
-  border-color: var(--desa-primary, #024ad8) !important;
-  box-shadow: 0 4px 12px rgba(2, 74, 216, 0.25) !important;
-}
-.wp-desa-carousel-prev {
-  left: 0 !important;
-}
-.wp-desa-carousel-next {
-  right: 0 !important;
 }
 
 /* --- Feature Grid --- */
