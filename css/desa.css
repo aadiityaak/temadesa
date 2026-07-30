@@ -1,0 +1,295 @@
+/* =========================================
+   Temadesa — Custom Desa Styles
+   Selaras dengan CSS variables plugin wp-desa
+   ========================================= */
+
+/* --- CSS Variables --- */
+.theme-temadesa {
+	--desa-primary: #024ad8;
+	--desa-primary-dark: #0e3191;
+	--desa-primary-soft: #c9e0fc;
+	--desa-accent: #2E7D32;
+	--desa-bg: #ffffff;
+	--desa-bg-warm: #f8f6f3;
+	--desa-bg-dark: #1a2332;
+	--desa-text: #1a1a1a;
+	--desa-text-light: #636363;
+	--desa-border: #e8e8e8;
+	--desa-font-body: "Inter", Arial, ui-sans-serif, sans-serif;
+	--desa-font-display: "Space Grotesk", "Inter", Arial, ui-sans-serif, sans-serif;
+}
+
+/* --- Top Bar --- */
+.desa-top-bar {
+	background: var(--desa-primary-dark);
+	color: #fff;
+	font-size: 0.8125rem;
+}
+.desa-top-bar a {
+	color: rgba(255,255,255,0.85);
+	text-decoration: none;
+}
+.desa-top-bar a:hover {
+	color: #fff;
+}
+.desa-top-menu {
+	margin: 0;
+	padding: 0;
+}
+.desa-top-menu li {
+	display: inline-block;
+	margin-left: 1rem;
+}
+
+/* --- Navbar --- */
+.desa-navbar {
+	background: var(--desa-primary);
+	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	min-height: 64px;
+	transition: background 0.2s;
+}
+.desa-navbar .navbar-brand {
+	padding: 0;
+	margin: 0;
+}
+.desa-navbar .navbar-brand img {
+	max-height: 44px;
+	width: auto;
+}
+.desa-site-title {
+	color: #fff;
+	text-decoration: none;
+	font-family: var(--desa-font-display);
+	font-size: 1.25rem;
+	font-weight: 600;
+	line-height: 1.2;
+}
+.desa-site-title:hover {
+	color: rgba(255,255,255,0.9);
+}
+
+/* Desktop nav links */
+.desa-nav .nav-link,
+.desa-nav > li > a {
+	color: rgba(255,255,255,0.9) !important;
+	padding: 0.5rem 1rem !important;
+	font-family: var(--desa-font-body);
+	font-size: 0.9375rem;
+	font-weight: 500;
+	border-radius: 4px;
+	transition: background 0.15s, color 0.15s;
+}
+.desa-nav .nav-link:hover,
+.desa-nav > li > a:hover {
+	background: rgba(255,255,255,0.12);
+	color: #fff !important;
+}
+.desa-nav .nav-link.active,
+.desa-nav .current-menu-item > a {
+	background: rgba(255,255,255,0.18);
+	color: #fff !important;
+}
+
+/* Dropdown */
+.desa-nav .sub-menu {
+	background: #fff;
+	border: 1px solid var(--desa-border);
+	border-radius: 8px;
+	box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+	padding: 0.5rem 0;
+	list-style: none;
+	min-width: 200px;
+}
+.desa-nav .sub-menu a {
+	color: var(--desa-text) !important;
+	padding: 0.5rem 1.25rem;
+	display: block;
+	font-size: 0.875rem;
+}
+.desa-nav .sub-menu a:hover {
+	background: var(--desa-bg-warm);
+	color: var(--desa-primary) !important;
+}
+
+/* Mobile offcanvas */
+.desa-nav-mobile {
+	list-style: none;
+	padding: 0;
+}
+.desa-nav-mobile > li > a {
+	display: block;
+	padding: 0.75rem 0;
+	color: var(--desa-text);
+	font-weight: 500;
+	border-bottom: 1px solid var(--desa-border);
+	text-decoration: none;
+}
+.desa-nav-mobile > li > a:hover {
+	color: var(--desa-primary);
+}
+.desa-nav-mobile .sub-menu {
+	list-style: none;
+	padding-left: 1rem;
+}
+.desa-nav-mobile .sub-menu a {
+	display: block;
+	padding: 0.5rem 0;
+	color: var(--desa-text-light);
+	font-size: 0.875rem;
+	text-decoration: none;
+}
+
+/* --- Footer --- */
+.desa-footer {
+	background: var(--desa-bg-dark);
+	color: rgba(255,255,255,0.85);
+}
+.desa-footer-main {
+	border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.desa-footer-title a {
+	color: #fff;
+	text-decoration: none;
+	font-family: var(--desa-font-display);
+}
+.desa-footer-title a:hover {
+	color: var(--desa-primary-soft);
+}
+.desa-footer-desc {
+	color: rgba(255,255,255,0.65);
+	line-height: 1.6;
+}
+.desa-footer-heading {
+	color: #fff;
+	font-family: var(--desa-font-display);
+	font-size: 1rem;
+	font-weight: 600;
+	position: relative;
+	padding-bottom: 0.75rem;
+}
+.desa-footer-heading::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 32px;
+	height: 2px;
+	background: var(--desa-primary);
+}
+.desa-footer-menu li {
+	margin-bottom: 0.5rem;
+}
+.desa-footer-menu a {
+	color: rgba(255,255,255,0.7);
+	text-decoration: none;
+	font-size: 0.875rem;
+	transition: color 0.15s;
+}
+.desa-footer-menu a:hover {
+	color: var(--desa-primary-soft);
+	padding-left: 4px;
+}
+.desa-footer-contact {
+	color: rgba(255,255,255,0.75);
+}
+.desa-footer-icon {
+	font-size: 1rem;
+	flex-shrink: 0;
+	width: 20px;
+	text-align: center;
+}
+.desa-social-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: rgba(255,255,255,0.1);
+	color: rgba(255,255,255,0.8);
+	text-decoration: none;
+	margin-right: 0.5rem;
+	transition: background 0.15s, color 0.15s;
+}
+.desa-social-link:hover {
+	background: var(--desa-primary);
+	color: #fff;
+}
+.desa-footer-bottom {
+	background: rgba(0,0,0,0.2);
+}
+.desa-copyright {
+	color: rgba(255,255,255,0.6);
+}
+.desa-copyright a {
+	color: rgba(255,255,255,0.8);
+	text-decoration: none;
+}
+.desa-copyright a:hover {
+	color: #fff;
+}
+.desa-footer-bottom-menu li {
+	display: inline-block;
+	margin-left: 1rem;
+}
+.desa-footer-bottom-menu a {
+	color: rgba(255,255,255,0.6);
+	text-decoration: none;
+}
+.desa-footer-bottom-menu a:hover {
+	color: #fff;
+}
+
+/* --- Page Layout --- */
+.desa-page-wrapper {
+	padding: 2.5rem 0;
+	background: var(--desa-bg);
+}
+.desa-page-title {
+	font-family: var(--desa-font-display);
+	font-size: 2rem;
+	font-weight: 600;
+	color: var(--desa-text);
+}
+
+/* Sidebar */
+.desa-page-sidebar .widget {
+	margin-bottom: 1.5rem;
+}
+.desa-page-sidebar .widget-title {
+	font-family: var(--desa-font-display);
+	font-size: 1.125rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 2px solid var(--desa-primary);
+	color: var(--desa-text);
+}
+
+/* --- Integration: wp-desa shortcodes in desa layout --- */
+.wp-desa-wrapper {
+	font-family: var(--desa-font-body);
+}
+.wp-desa-wrapper .wp-desa-btn-primary {
+	background: var(--desa-primary);
+	border-color: var(--desa-primary);
+}
+.wp-desa-wrapper .wp-desa-btn-primary:hover {
+	background: var(--desa-primary-dark);
+}
+
+/* --- Responsive --- */
+@media (max-width: 767.98px) {
+	.desa-navbar {
+		min-height: 56px;
+	}
+	.desa-page-wrapper {
+		padding: 1.5rem 0;
+	}
+	.desa-page-title {
+		font-size: 1.5rem;
+	}
+	.desa-footer-main {
+		padding: 2rem 0 1rem !important;
+	}
+}
