@@ -9,6 +9,9 @@
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
+// Load unified Tema Desa Options (admin page).
+require_once get_stylesheet_directory() . '/inc/theme-options.php';
+
 /**
  * Enqueue parent and child theme styles.
  * Parent styles are already enqueued by wsbase_scripts().

@@ -1,14 +1,17 @@
 <?php
 /**
- * The header for our theme - Desa override
- *
- * Displays all of the <head> section and everything up till <div id="content">
+ * The header for our theme — Desa override
  *
  * @package Temadesa
  */
 
-// Exit if accessed directly.
 defined('ABSPATH') || exit;
+
+$wsdesa       = get_option('wp_desa_settings', []);
+$desa_nama    = !empty($wsdesa['nama_desa']) ? $wsdesa['nama_desa'] : get_bloginfo('name');
+$desa_logo    = !empty($wsdesa['logo_kabupaten']) ? $wsdesa['logo_kabupaten'] : '';
+$desa_kec     = !empty($wsdesa['nama_kecamatan']) ? $wsdesa['nama_kecamatan'] : '';
+$desa_kab     = !empty($wsdesa['nama_kabupaten']) ? $wsdesa['nama_kabupaten'] : '';
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -23,83 +26,108 @@ defined('ABSPATH') || exit;
 <?php do_action('wp_body_open'); ?>
 <div class="site" id="page">
 
-	<!-- Desa Top Bar -->
-	<?php if (has_nav_menu('desa-top')) : ?>
-		<div class="desa-top-bar d-none d-md-block">
-			<div class="container d-flex justify-content-between align-items-center py-1 small">
-				<div class="desa-top-bar-left">
-					<span class="text-white">
-						<?php echo esc_html(get_bloginfo('description') ?: 'Website Desa ' . get_bloginfo('name')); ?>
-					</span>
-				</div>
-				<div class="desa-top-bar-right">
-					<?php
-					wp_nav_menu(array(
-						'theme_location' => 'desa-top',
-						'container'      => false,
-						'menu_class'     => 'desa-top-menu list-inline mb-0',
-						'depth'          => 1,
-						'fallback_cb'    => false,
-					));
-					?>
-				</div>
-			</div>
+	<!-- Top Bar — kec/kab info -->
+	<div class="desa-top-bar">
+		<div class="container d-flex justify-content-between align-items-center">
+			<span class="desa-top-bar-left">
+				<?php
+				if ($desa_kec && $desa_kab) {
+					echo esc_html("Kec. $desa_kec, $desa_kab");
+				} else {
+					echo esc_html(get_bloginfo('description') ?: "Website $desa_nama");
+				}
+				?>
+			</span>
+			<?php if (has_nav_menu('desa-top')) : ?>
+				<?php
+				wp_nav_menu(array(
+					'theme_location' => 'desa-top',
+					'container'      => false,
+					'menu_class'     => 'desa-top-menu',
+					'depth'          => 1,
+					'fallback_cb'    => false,
+				));
+				?>
+			<?php endif; ?>
 		</div>
-	<?php endif; ?>
+	</div>
 
-	<!-- Desa Navbar -->
-	<nav id="main-nav" class="navbar navbar-expand-md navbar-dark desa-navbar sticky-top" aria-labelledby="main-nav-label">
+	<!-- Navbar — design system: white canvas, ink text, 64px -->
+	<nav id="main-nav" class="navbar navbar-expand-md navbar-light desa-navbar sticky-top"
+		 aria-labelledby="main-nav-label">
 		<h2 id="main-nav-label" class="screen-reader-text">
 			<?php esc_html_e('Main Navigation', 'temadesa'); ?>
 		</h2>
 
 		<div class="container">
 			<!-- Brand -->
-			<div class="navbar-brand d-flex align-items-center">
-				<?php if (has_custom_logo()) : ?>
+			<a class="desa-brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+				<?php if ($desa_logo) : ?>
+					<img class="desa-brand-logo"
+						 src="<?php echo esc_url($desa_logo); ?>"
+						 alt="<?php echo esc_attr($desa_nama); ?>"
+						 width="32" height="32">
+				<?php elseif (has_custom_logo()) : ?>
 					<?php the_custom_logo(); ?>
 				<?php else : ?>
-					<a class="desa-site-title" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
-						<?php bloginfo('name'); ?>
-					</a>
+					<span class="desa-brand-logo desa-brand-logo--fallback">🏘️</span>
 				<?php endif; ?>
-			</div>
+				<span class="desa-brand-name"><?php echo esc_html($desa_nama); ?></span>
+			</a>
 
-			<!-- Toggler -->
-			<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#desaOffcanvasNav" aria-controls="desaOffcanvasNav" aria-expanded="false" aria-label="<?php esc_attr_e('Toggle navigation', 'temadesa'); ?>">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<!-- Desktop Menu -->
-			<div class="collapse navbar-collapse d-none d-md-flex" id="desaDesktopNav">
+			<!-- Desktop Nav -->
+			<div class="desa-nav-desktop" id="desaDesktopNav">
 				<?php
-				wp_nav_menu(array(
+				$nav_args = array(
 					'theme_location' => 'primary',
 					'container'      => false,
-					'menu_class'     => 'navbar-nav ms-auto desa-nav',
+					'menu_class'     => 'desa-nav',
 					'fallback_cb'    => false,
 					'depth'          => 3,
-				));
+				);
+				if (class_exists('wsbase_WP_Bootstrap_Navwalker')) {
+					$nav_args['walker'] = new wsbase_WP_Bootstrap_Navwalker();
+				}
+				wp_nav_menu($nav_args);
 				?>
+
+				<div class="desa-nav-actions">
+					<a href="<?php echo esc_url(get_permalink(get_page_by_path('layanan')) ?: home_url('/layanan')); ?>"
+					   class="desa-btn desa-btn-primary">Layanan</a>
+				</div>
 			</div>
 
-			<!-- Mobile Offcanvas -->
-			<div class="offcanvas offcanvas-end d-md-none" tabindex="-1" id="desaOffcanvasNav">
-				<div class="offcanvas-header">
-					<h5 class="offcanvas-title"><?php bloginfo('name'); ?></h5>
-					<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-				</div>
-				<div class="offcanvas-body">
-					<?php
-					wp_nav_menu(array(
-						'theme_location' => 'primary',
-						'container'      => false,
-						'menu_class'     => 'navbar-nav ms-auto desa-nav-mobile',
-						'fallback_cb'    => false,
-						'depth'          => 3,
-					));
-					?>
-				</div>
-			</div>
+			<!-- Toggler (mobile) -->
+			<button class="desa-nav-toggle" type="button" data-bs-toggle="offcanvas"
+					data-bs-target="#desaOffcanvasNav" aria-controls="desaOffcanvasNav"
+					aria-expanded="false" aria-label="<?php esc_attr_e('Toggle navigation', 'temadesa'); ?>">
+				<span class="desa-nav-toggle-bar"></span>
+				<span class="desa-nav-toggle-bar"></span>
+				<span class="desa-nav-toggle-bar"></span>
+			</button>
 		</div>
 	</nav>
+
+	<!-- Mobile Offcanvas -->
+	<div class="offcanvas offcanvas-end" tabindex="-1" id="desaOffcanvasNav"
+		 aria-labelledby="desaOffcanvasLabel">
+		<div class="offcanvas-header">
+			<h5 class="offcanvas-title" id="desaOffcanvasLabel"><?php echo esc_html($desa_nama); ?></h5>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<?php
+			wp_nav_menu(array(
+				'theme_location' => 'primary',
+				'container'      => false,
+				'menu_class'     => 'desa-nav-mobile',
+				'fallback_cb'    => false,
+				'depth'          => 3,
+			));
+			?>
+			<div class="mt-4">
+				<a href="<?php echo esc_url(get_permalink(get_page_by_path('layanan')) ?: home_url('/layanan')); ?>"
+				   class="desa-btn desa-btn-primary d-block text-center">Layanan</a>
+			</div>
+		</div>
+	</div>
