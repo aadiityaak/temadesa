@@ -21,26 +21,34 @@ $shortcode_statistik = '[wp_desa_statistik]';
 $shortcode_berita    = '[wp_desa_berita limit="3"]';
 $desa_desc           = get_bloginfo('description') ?: "Portal resmi $desa_nama — informasi pelayanan, potensi, dan pembangunan desa.";
 
-// Carousel slides from theme options, fallback to defaults.
+// Carousel slides from theme options (dynamic count).
 $carousel     = get_option('temadesa_carousel_slides', []);
-$default_bgs  = [
-	1 => 'linear-gradient(135deg,#0e3191 0%,#024ad8 60%,#1a5a9e 100%)',
-	2 => 'linear-gradient(135deg,#0d47a1 0%,#1565c0 50%,#1976d2 100%)',
-	3 => 'linear-gradient(135deg,#1a237e 0%,#283593 50%,#3949ab 100%)',
+if (empty($carousel)) {
+	$carousel = [1 => []];
+}
+
+// Generate fallback gradient for any slide index.
+$bg_gradients = [
+	'linear-gradient(135deg,#0e3191 0%,#024ad8 60%,#1a5a9e 100%)',
+	'linear-gradient(135deg,#0d47a1 0%,#1565c0 50%,#1976d2 100%)',
+	'linear-gradient(135deg,#1a237e 0%,#283593 50%,#3949ab 100%)',
+	'linear-gradient(135deg,#004d40 0%,#00695c 50%,#00897b 100%)',
+	'linear-gradient(135deg,#4a148c 0%,#6a1b9a 50%,#8e24aa 100%)',
+	'linear-gradient(135deg,#bf360c 0%,#d84315 50%,#e64a19 100%)',
 ];
 
 // Build final slide data for JS.
 $slide_data = [];
-for ($i = 1; $i <= 3; $i++) {
-	$s          = $carousel[$i] ?? [];
+foreach ($carousel as $i => $s) {
 	$is_slide1  = $i === 1;
 	$has_image  = !empty($s['image']);
 	$has_heading = !empty($s['heading']);
 
 	// Background.
+	$bg_idx  = min($i, count($bg_gradients)) - 1;
 	$bg_style = $has_image
 		? 'background:url(' . esc_url($s['image']) . ') center/cover no-repeat;'
-		: 'background:' . $default_bgs[$i] . ';';
+		: 'background:' . $bg_gradients[$bg_idx] . ';';
 
 	// Heading.
 	$heading = '';
@@ -49,7 +57,7 @@ for ($i = 1; $i <= 3; $i++) {
 	} elseif ($is_slide1) {
 		$heading = $desa_nama;
 	} else {
-		$heading = $i === 2 ? 'Layanan Desa' : 'Selamat Datang';
+		$heading = 'Slide ' . $i;
 	}
 
 	// Text.
@@ -57,8 +65,6 @@ for ($i = 1; $i <= 3; $i++) {
 		$text = $s['text'];
 	} elseif ($is_slide1) {
 		$text = $desa_desc;
-	} elseif ($i === 2) {
-		$text = 'Berbagai layanan administrasi dan informasi desa dapat diakses secara online. Ajukan surat, cek keuangan, atau sampaikan aspirasi.';
 	} else {
 		$text = $desa_kades
 			? "\"Bersama membangun {$desa_nama} menuju desa yang mandiri, maju, dan sejahtera.\""
@@ -74,7 +80,7 @@ for ($i = 1; $i <= 3; $i++) {
 	$slide_data[] = [
 		'bg_style'     => $bg_style,
 		'has_overlay'  => !$has_image,
-		'show_logo'    => $is_slide1 && !empty($desa_logo),
+		'show_logo'    => false,
 		'logo_url'     => $desa_logo,
 		'heading'      => $heading,
 		'show_subtitle' => $is_slide1 && $desa_kec && $desa_kab && !$has_heading,
@@ -149,10 +155,8 @@ get_header();
 		var slideEl = clone.querySelector('.desa-hero-slide');
 		slideEl.setAttribute('style', slide.bg_style);
 
-		// Overlay
-		if (!slide.has_overlay) {
-			clone.querySelector('.desa-hero-overlay').style.display = 'none';
-		}
+		// Overlay — always visible (dark gradient)
+		// (no conditional, overlay is in template)
 
 		// Logo
 		var logo = clone.querySelector('.desa-hero-logo');

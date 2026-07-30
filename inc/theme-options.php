@@ -69,7 +69,7 @@ function temadesa_options_register_settings()
 }
 
 /**
- * Sanitize carousel slides array.
+ * Sanitize carousel slides array — re-index sequentially.
  */
 function temadesa_options_sanitize_carousel($input)
 {
@@ -78,9 +78,12 @@ function temadesa_options_sanitize_carousel($input)
 	}
 
 	$sanitized = [];
-	foreach ($input as $key => $slide) {
-		$i             = absint($key);
-		$sanitized[$i] = [
+	$idx       = 1;
+	foreach ($input as $slide) {
+		if (!is_array($slide)) {
+			continue;
+		}
+		$sanitized[$idx] = [
 			'image'     => esc_url_raw($slide['image'] ?? ''),
 			'heading'   => sanitize_text_field($slide['heading'] ?? ''),
 			'text'      => sanitize_textarea_field($slide['text'] ?? ''),
@@ -89,13 +92,14 @@ function temadesa_options_sanitize_carousel($input)
 			'btn2_text' => sanitize_text_field($slide['btn2_text'] ?? ''),
 			'btn2_url'  => esc_url_raw($slide['btn2_url'] ?? ''),
 		];
+		$idx++;
 	}
 
 	return $sanitized;
 }
 
 /**
- * Enqueue media uploader + WP-Desa admin styles.
+ * Enqueue media uploader + admin styles (WP-Desa compatible).
  */
 function temadesa_options_admin_scripts($hook)
 {
@@ -103,61 +107,63 @@ function temadesa_options_admin_scripts($hook)
 		return;
 	}
 
-	// Enqueue WP-Desa admin CSS if plugin is active.
-	if (wp_style_is('wp-desa-admin-css', 'registered')) {
-		wp_enqueue_style('wp-desa-admin-css');
+	// --- Enqueue WP-Desa admin CSS directly ---
+	$wp_desa_css = WP_PLUGIN_DIR . '/wp-desa/assets/css/admin/style.css';
+	if (file_exists($wp_desa_css)) {
+		wp_enqueue_style(
+			'temadesa-wpdesa-admin',
+			plugins_url('assets/css/admin/style.css', WP_PLUGIN_DIR . '/wp-desa/wp-desa.php'),
+			[],
+			filemtime($wp_desa_css)
+		);
 	}
 
-	// Our admin overrides.
-	wp_add_inline_style('wp-desa-admin-css', '
+	// Register + enqueue our own handle for inline overrides.
+	wp_register_style('temadesa-options-base', false);
+	wp_enqueue_style('temadesa-options-base');
+	wp_add_inline_style('temadesa-options-base', '
+		body.temadesa-options-page #wpcontent { padding-left: 0; }
+		.wp-desa-wrapper { margin-top: 0; }
 		.temadesa-slide-box {
-			background: var(--cloud, #f0f0f1);
-			padding: var(--sp-xl, 20px);
-			margin-bottom: var(--sp-xl, 20px);
-			border-radius: var(--rounded-lg, 8px);
-			border: 1px solid var(--fog, #dcdcde);
+			background: #f0f0f1;
+			padding: 20px; margin-bottom: 20px;
+			border-radius: 8px; border: 1px solid #dcdcde;
 		}
 		.temadesa-slide-box h2 {
-			font-family: var(--font-display, inherit);
-			font-size: 18px;
-			font-weight: 500;
-			margin: 0 0 var(--sp-md, 16px) 0;
+			font-size: 18px; font-weight: 500;
+			margin: 0 0 16px 0;
 		}
-		.temadesa-field-row {
-			margin-bottom: var(--sp-sm, 12px);
-		}
-		.temadesa-img-preview img {
-			max-width: 200px;
-			max-height: 100px;
-			border-radius: 6px;
-		}
-		body.temadesa-options-page #wpcontent {
-			padding-left: 0;
-		}
+		.temadesa-field-row { margin-bottom: 12px; }
+		.temadesa-img-preview img { max-width:200px; max-height:100px; border-radius:6px; }
 	');
 
 	wp_enqueue_media();
 
-	// Media uploader JS.
-	wp_add_inline_script('media-upload', '
+	// Media uploader JS — register dummy handle + inline.
+	wp_register_script('temadesa-options-media', false, ['jquery'], false, true);
+	wp_enqueue_script('temadesa-options-media');
+	wp_add_inline_script('temadesa-options-media', '
 	jQuery(function($){
-		$(".temadesa-upload-btn").on("click",function(e){
-			e.preventDefault();
-			var btn=$(this), container=btn.closest(".temadesa-slide-box");
-			var imgInput=container.find(".temadesa-img-input"), preview=container.find(".temadesa-img-preview");
-			var frame=wp.media({title:btn.data("title")||"Pilih Gambar",button:{text:"Pilih"},multiple:false});
-			frame.on("select",function(){
-				var att=frame.state().get("selection").first().toJSON();
-				imgInput.val(att.url);
-				preview.html("<img src=\""+att.url+"\">");
+		$("#temadesa-slides-container")
+			.on("click",".temadesa-upload-btn",function(e){
+				e.preventDefault();
+				var btn=$(this), box=btn.closest(".temadesa-slide-box");
+				var input=box.find(".temadesa-img-input"), preview=box.find(".temadesa-img-preview");
+				var frame=wp.media({title:btn.data("title")||"Pilih Gambar",button:{text:"Pilih"},multiple:false});
+				frame.on("select",function(){
+					var att=frame.state().get("selection").first().toJSON();
+					input.val(att.url);
+					preview.html("<img src=\""+att.url+"\">");
+					box.find(".temadesa-remove-img").removeClass("wp-desa-hidden");
+				});
+				frame.open();
+			})
+			.on("click",".temadesa-remove-img",function(){
+				var box=$(this).closest(".temadesa-slide-box");
+				box.find(".temadesa-img-input").val("");
+				box.find(".temadesa-img-preview").html("<span class=\"dashicons dashicons-format-image\" style=\"color:#c2c2c2;font-size:32px;width:32px;height:32px;\"></span>");
+				$(this).addClass("wp-desa-hidden");
 			});
-			frame.open();
-		});
-		$(".temadesa-remove-img").on("click",function(){
-			var c=$(this).closest(".temadesa-slide-box");
-			c.find(".temadesa-img-input").val("");
-			c.find(".temadesa-img-preview").html("<span class=\"dashicons dashicons-format-image\" style=\"color:#c2c2c2;font-size:32px;width:32px;height:32px;\"></span>");
-		});
 	});');
 }
 
@@ -169,11 +175,6 @@ function temadesa_options_render_page()
 	$active_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'carousel';
 	?>
 	<div class="wrap wp-desa-wrapper">
-		<!-- Header -->
-		<div class="wp-desa-header" style="padding-top:var(--sp-xl);">
-			<h1 class="wp-desa-title">Tema Desa</h1>
-		</div>
-
 		<!-- Subnav tabs (pill-style) -->
 		<div class="wp-desa__subnav" style="margin:0 -20px 0;">
 			<div class="wp-desa__subnav-title">Pengaturan</div>
@@ -220,7 +221,7 @@ function temadesa_options_render_page()
 }
 
 /**
- * Render Carousel tab.
+ * Render Carousel tab — dynamic slides with add/remove.
  */
 function temadesa_options_render_carousel_tab()
 {
@@ -235,97 +236,147 @@ function temadesa_options_render_carousel_tab()
 		'btn2_url'  => '',
 	];
 
-	for ($i = 1; $i <= 3; $i++) {
-		if (!isset($slides[$i])) {
-			$slides[$i] = $default;
-		}
+	// Default to 1 slide if empty.
+	if (empty($slides)) {
+		$slides = [1 => $default];
 	}
+
+	$slide_count = count($slides);
 	?>
 
 	<div class="wp-desa-tab-content">
 		<p class="wp-desa-helper" style="margin-bottom:var(--sp-xl);">
-			Atur slide hero di halaman depan. Kosongkan heading / text untuk memakai data default desa.
+			Atur slide hero di halaman depan. Slide pertama otomatis jadi slide utama (logo + nama desa).
+			Kosongkan heading / text untuk memakai data default desa.
 		</p>
 
-		<?php for ($i = 1; $i <= 3; $i++) :
-			$s = $slides[$i];
-		?>
-		<div class="temadesa-slide-box">
-			<h2>Slide <?php echo $i; ?></h2>
+		<div id="temadesa-slides-container">
+			<?php foreach ($slides as $i => $s) :
+				temadesa_render_slide_fields($i, $s);
+			endforeach; ?>
+		</div>
 
-			<!-- Image -->
-			<div class="temadesa-field-row">
-				<label class="wp-desa-label">Background Image</label>
-				<div class="wp-desa-image-preview temadesa-img-preview" style="width:180px;height:100px;">
-					<?php if ($s['image']) : ?>
-						<img src="<?php echo esc_url($s['image']); ?>">
-					<?php else : ?>
-						<span class="dashicons dashicons-format-image" style="color:#c2c2c2;font-size:32px;width:32px;height:32px;"></span>
-					<?php endif; ?>
-				</div>
-				<input type="hidden" name="temadesa_carousel_slides[<?php echo $i; ?>][image]"
-					   class="temadesa-img-input" value="<?php echo esc_attr($s['image']); ?>">
-				<div class="wp-desa-flex-gap-8" style="margin-top:var(--sp-xs);">
-					<button type="button" class="wp-desa-btn wp-desa-btn-secondary temadesa-upload-btn"
-							data-title="Slide <?php echo $i; ?> Background">
-						<span class="dashicons dashicons-upload"></span> Pilih Gambar
-					</button>
-					<button type="button" class="wp-desa-btn wp-desa-btn-danger temadesa-remove-img <?php echo empty($s['image']) ? 'wp-desa-hidden' : ''; ?>">
-						Hapus
-					</button>
-				</div>
+		<button type="button" class="wp-desa-btn wp-desa-btn-secondary" id="temadesa-add-slide" style="margin-top:var(--sp-sm);">
+			<span class="dashicons dashicons-plus"></span> Tambah Slide
+		</button>
+	</div>
+
+	<!-- Template for JS -->
+	<template id="temadesa-slide-tpl"><?php
+		temadesa_render_slide_fields('__i__', $default, true);
+	?></template>
+
+	<script>
+	jQuery(function($){
+		var nextIdx = <?php echo $slide_count + 1; ?>;
+		var tpl = document.getElementById('temadesa-slide-tpl');
+
+		$('#temadesa-add-slide').on('click', function(){
+			var html = tpl.innerHTML.replace(/__i__/g, nextIdx);
+			var $el = $(html);
+			$('#temadesa-slides-container').append($el);
+			nextIdx++;
+		});
+
+		$('#temadesa-slides-container').on('click', '.temadesa-remove-slide', function(){
+			if ($('#temadesa-slides-container > .temadesa-slide-box').length <= 1) {
+				alert('Minimal harus ada 1 slide.');
+				return;
+			}
+			$(this).closest('.temadesa-slide-box').remove();
+		});
+	});
+	</script>
+	<?php
+}
+
+/**
+ * Render fields for one slide (used by PHP loop + JS template).
+ */
+function temadesa_render_slide_fields($i, $s, $is_template = false)
+{
+	$hidden_class = empty($s['image']) ? 'wp-desa-hidden' : '';
+	?>
+	<div class="temadesa-slide-box">
+		<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+			<h2 style="margin:0;">Slide <span class="temadesa-slide-num"><?php echo esc_html($i); ?></span></h2>
+			<button type="button" class="wp-desa-btn wp-desa-btn-danger temadesa-remove-slide">
+				<span class="dashicons dashicons-trash" style="font-size:16px;width:16px;height:16px;"></span> Hapus
+			</button>
+		</div>
+
+		<!-- Image -->
+		<div class="temadesa-field-row">
+			<label class="wp-desa-label">Background Image</label>
+			<div class="wp-desa-image-preview temadesa-img-preview" style="width:180px;height:100px;">
+				<?php if ($s['image']) : ?>
+					<img src="<?php echo esc_url($s['image']); ?>">
+				<?php else : ?>
+					<span class="dashicons dashicons-format-image" style="color:#c2c2c2;font-size:32px;width:32px;height:32px;"></span>
+				<?php endif; ?>
 			</div>
-
-			<!-- Heading -->
-			<div class="temadesa-field-row">
-				<label class="wp-desa-label" for="heading_<?php echo $i; ?>">Heading</label>
-				<input type="text" class="wp-desa-input" id="heading_<?php echo $i; ?>"
-					   name="temadesa_carousel_slides[<?php echo $i; ?>][heading]"
-					   value="<?php echo esc_attr($s['heading']); ?>"
-					   placeholder="Kosongi untuk nama desa default">
-			</div>
-
-			<!-- Text -->
-			<div class="temadesa-field-row">
-				<label class="wp-desa-label" for="text_<?php echo $i; ?>">Text / Description</label>
-				<textarea class="wp-desa-textarea" id="text_<?php echo $i; ?>" rows="3"
-						  name="temadesa_carousel_slides[<?php echo $i; ?>][text]"
-						  placeholder="Deskripsi slide"><?php echo esc_textarea($s['text']); ?></textarea>
-			</div>
-
-			<!-- Buttons -->
-			<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-md);">
-				<div>
-					<label class="wp-desa-label">Button 1 — Text</label>
-					<input type="text" class="wp-desa-input"
-						   name="temadesa_carousel_slides[<?php echo $i; ?>][btn1_text]"
-						   value="<?php echo esc_attr($s['btn1_text']); ?>"
-						   placeholder="cth: Profil Desa">
-				</div>
-				<div>
-					<label class="wp-desa-label">Button 1 — URL</label>
-					<input type="text" class="wp-desa-input"
-						   name="temadesa_carousel_slides[<?php echo $i; ?>][btn1_url]"
-						   value="<?php echo esc_attr($s['btn1_url']); ?>"
-						   placeholder="cth: #profil">
-				</div>
-				<div>
-					<label class="wp-desa-label">Button 2 — Text</label>
-					<input type="text" class="wp-desa-input"
-						   name="temadesa_carousel_slides[<?php echo $i; ?>][btn2_text]"
-						   value="<?php echo esc_attr($s['btn2_text']); ?>"
-						   placeholder="cth: Layanan">
-				</div>
-				<div>
-					<label class="wp-desa-label">Button 2 — URL</label>
-					<input type="text" class="wp-desa-input"
-						   name="temadesa_carousel_slides[<?php echo $i; ?>][btn2_url]"
-						   value="<?php echo esc_attr($s['btn2_url']); ?>"
-						   placeholder="cth: #layanan">
-				</div>
+			<input type="hidden" class="temadesa-img-input"
+				   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][image]"
+				   value="<?php echo esc_attr($s['image']); ?>">
+			<div class="wp-desa-flex-gap-8" style="margin-top:var(--sp-xs);">
+				<button type="button" class="wp-desa-btn wp-desa-btn-secondary temadesa-upload-btn"
+						data-title="Slide <?php echo esc_attr($i); ?> Background">
+					<span class="dashicons dashicons-upload"></span> Pilih Gambar
+				</button>
+				<button type="button" class="wp-desa-btn wp-desa-btn-danger temadesa-remove-img <?php echo $hidden_class; ?>">
+					Hapus
+				</button>
 			</div>
 		</div>
-		<?php endfor; ?>
+
+		<!-- Heading -->
+		<div class="temadesa-field-row">
+			<label class="wp-desa-label" for="heading_<?php echo esc_attr($i); ?>">Heading</label>
+			<input type="text" class="wp-desa-input" id="heading_<?php echo esc_attr($i); ?>"
+				   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][heading]"
+				   value="<?php echo esc_attr($s['heading']); ?>"
+				   placeholder="Kosongi untuk nama desa default">
+		</div>
+
+		<!-- Text -->
+		<div class="temadesa-field-row">
+			<label class="wp-desa-label" for="text_<?php echo esc_attr($i); ?>">Text / Description</label>
+			<textarea class="wp-desa-textarea" id="text_<?php echo esc_attr($i); ?>" rows="3"
+					  name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][text]"
+					  placeholder="Deskripsi slide"><?php echo esc_textarea($s['text'] ?? ''); ?></textarea>
+		</div>
+
+		<!-- Buttons -->
+		<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-md);">
+			<div>
+				<label class="wp-desa-label">Button 1 — Text</label>
+				<input type="text" class="wp-desa-input"
+					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn1_text]"
+					   value="<?php echo esc_attr($s['btn1_text'] ?? ''); ?>"
+					   placeholder="cth: Profil Desa">
+			</div>
+			<div>
+				<label class="wp-desa-label">Button 1 — URL</label>
+				<input type="text" class="wp-desa-input"
+					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn1_url]"
+					   value="<?php echo esc_attr($s['btn1_url'] ?? ''); ?>"
+					   placeholder="cth: #profil">
+			</div>
+			<div>
+				<label class="wp-desa-label">Button 2 — Text</label>
+				<input type="text" class="wp-desa-input"
+					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn2_text]"
+					   value="<?php echo esc_attr($s['btn2_text'] ?? ''); ?>"
+					   placeholder="cth: Layanan">
+			</div>
+			<div>
+				<label class="wp-desa-label">Button 2 — URL</label>
+				<input type="text" class="wp-desa-input"
+					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn2_url]"
+					   value="<?php echo esc_attr($s['btn2_url'] ?? ''); ?>"
+					   placeholder="cth: #layanan">
+			</div>
+		</div>
 	</div>
 	<?php
 }
