@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tema Desa Options — unified theme settings page.
  * UI styled like WP-Desa admin panel.
@@ -173,18 +174,18 @@ function temadesa_options_admin_scripts($hook)
 function temadesa_options_render_page()
 {
 	$active_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'carousel';
-	?>
+?>
 	<div class="wrap wp-desa-wrapper">
 		<!-- Subnav tabs (pill-style) -->
 		<div class="wp-desa__subnav" style="margin:0 -20px 0;">
 			<div class="wp-desa__subnav-title">Pengaturan</div>
 			<nav class="wp-desa__subnav-tabs">
 				<a href="?page=temadesa-options&amp;tab=carousel"
-				   class="wp-desa__subnav-tab <?php echo $active_tab === 'carousel' ? 'is-active' : ''; ?>">
+					class="wp-desa__subnav-tab <?php echo $active_tab === 'carousel' ? 'is-active' : ''; ?>">
 					Carousel
 				</a>
 				<a href="?page=temadesa-options&amp;tab=fitur-halaman"
-				   class="wp-desa__subnav-tab <?php echo $active_tab === 'fitur-halaman' ? 'is-active' : ''; ?>">
+					class="wp-desa__subnav-tab <?php echo $active_tab === 'fitur-halaman' ? 'is-active' : ''; ?>">
 					Fitur Halaman
 				</a>
 			</nav>
@@ -199,10 +200,10 @@ function temadesa_options_render_page()
 				<div class="wp-desa-card" style="flex:1;max-width:800px;">
 					<?php
 					if ($active_tab === 'carousel') {
-					temadesa_options_render_carousel_tab();
-				} elseif ($active_tab === 'fitur-halaman') {
-					temadesa_options_render_fitur_halaman_tab();
-				}
+						temadesa_options_render_carousel_tab();
+					} elseif ($active_tab === 'fitur-halaman') {
+						temadesa_options_render_fitur_halaman_tab();
+					}
 					?>
 				</div>
 
@@ -222,7 +223,7 @@ function temadesa_options_render_page()
 			</div>
 		</form>
 	</div>
-	<?php
+<?php
 }
 
 /**
@@ -237,7 +238,7 @@ function temadesa_options_render_fitur_halaman_tab()
 	if (isset($_POST['temadesa_generate']) && check_admin_referer('temadesa_generate_pages')) {
 		$generated = temadesa_generate_feature_pages();
 	}
-	?>
+?>
 	<div class="wp-desa-tab-content">
 		<p class="wp-desa-helper" style="margin-bottom:var(--sp-xl);">
 			Halaman fitur website yang tersedia. Klik <strong>Generate Halaman</strong> untuk membuat halaman
@@ -245,9 +246,9 @@ function temadesa_options_render_fitur_halaman_tab()
 		</p>
 
 		<?php if (!empty($generated)) : ?>
-		<div class="notice notice-success inline" style="margin:0 0 var(--sp-md);">
-			<p><?php printf('Berhasil membuat %d halaman baru.', count($generated)); ?></p>
-		</div>
+			<div class="notice notice-success inline" style="margin:0 0 var(--sp-md);">
+				<p><?php printf('Berhasil membuat %d halaman baru.', count($generated)); ?></p>
+			</div>
 		<?php endif; ?>
 
 		<div class="wp-desa-card" style="padding:0;overflow:hidden;">
@@ -265,24 +266,24 @@ function temadesa_options_render_fitur_halaman_tab()
 					<?php foreach ($features as $key => $feat) :
 						$page_id = temadesa_page_exists($feat['slug']);
 					?>
-					<tr>
-						<td>
-							<span class="dashicons dashicons-<?php echo $page_id ? 'yes-alt' : 'marker'; ?>"
-								  style="color:<?php echo $page_id ? '#22c55e' : '#f59e0b'; ?>"></span>
-						</td>
-						<td><strong><?php echo esc_html($feat['title']); ?></strong></td>
-						<td style="color:#666;font-size:13px;"><?php echo esc_html($feat['desc']); ?></td>
-						<td>
-							<?php if ($page_id) : ?>
-								<a href="<?php echo esc_url(get_edit_post_link($page_id)); ?>" target="_blank">
-									<?php echo esc_html(get_the_title($page_id)); ?> &rarr;
-								</a>
-							<?php else : ?>
-								<span style="color:#f59e0b;">Belum dibuat</span>
-							<?php endif; ?>
-						</td>
-						<td><code><?php echo esc_html($feat['shortcode']); ?></code></td>
-					</tr>
+						<tr>
+							<td>
+								<span class="dashicons dashicons-<?php echo $page_id ? 'yes-alt' : 'marker'; ?>"
+									style="color:<?php echo $page_id ? '#22c55e' : '#f59e0b'; ?>"></span>
+							</td>
+							<td><strong><?php echo esc_html($feat['title']); ?></strong></td>
+							<td style="color:#666;font-size:13px;"><?php echo esc_html($feat['desc']); ?></td>
+							<td>
+								<?php if ($page_id) : ?>
+									<a href="<?php echo esc_url(get_edit_post_link($page_id)); ?>" target="_blank">
+										<?php echo esc_html(get_the_title($page_id)); ?> &rarr;
+									</a>
+								<?php else : ?>
+									<span style="color:#f59e0b;">Belum dibuat</span>
+								<?php endif; ?>
+							</td>
+							<td><code><?php echo esc_html($feat['shortcode']); ?></code></td>
+						</tr>
 					<?php endforeach; ?>
 				</tbody>
 			</table>
@@ -295,7 +296,7 @@ function temadesa_options_render_fitur_halaman_tab()
 			</button>
 		</form>
 	</div>
-	<?php
+<?php
 }
 
 /**
@@ -320,7 +321,7 @@ function temadesa_options_render_carousel_tab()
 	}
 
 	$slide_count = count($slides);
-	?>
+?>
 
 	<div class="wp-desa-tab-content">
 		<p class="wp-desa-helper" style="margin-bottom:var(--sp-xl);">
@@ -341,31 +342,31 @@ function temadesa_options_render_carousel_tab()
 
 	<!-- Template for JS -->
 	<template id="temadesa-slide-tpl"><?php
-		temadesa_render_slide_fields('__i__', $default, true);
-	?></template>
+																		temadesa_render_slide_fields('__i__', $default, true);
+																		?></template>
 
 	<script>
-	jQuery(function($){
-		var nextIdx = <?php echo $slide_count + 1; ?>;
-		var tpl = document.getElementById('temadesa-slide-tpl');
+		jQuery(function($) {
+			var nextIdx = <?php echo $slide_count + 1; ?>;
+			var tpl = document.getElementById('temadesa-slide-tpl');
 
-		$('#temadesa-add-slide').on('click', function(){
-			var html = tpl.innerHTML.replace(/__i__/g, nextIdx);
-			var $el = $(html);
-			$('#temadesa-slides-container').append($el);
-			nextIdx++;
-		});
+			$('#temadesa-add-slide').on('click', function() {
+				var html = tpl.innerHTML.replace(/__i__/g, nextIdx);
+				var $el = $(html);
+				$('#temadesa-slides-container').append($el);
+				nextIdx++;
+			});
 
-		$('#temadesa-slides-container').on('click', '.temadesa-remove-slide', function(){
-			if ($('#temadesa-slides-container > .temadesa-slide-box').length <= 1) {
-				alert('Minimal harus ada 1 slide.');
-				return;
-			}
-			$(this).closest('.temadesa-slide-box').remove();
+			$('#temadesa-slides-container').on('click', '.temadesa-remove-slide', function() {
+				if ($('#temadesa-slides-container > .temadesa-slide-box').length <= 1) {
+					alert('Minimal harus ada 1 slide.');
+					return;
+				}
+				$(this).closest('.temadesa-slide-box').remove();
+			});
 		});
-	});
 	</script>
-	<?php
+<?php
 }
 
 /**
@@ -374,7 +375,7 @@ function temadesa_options_render_carousel_tab()
 function temadesa_render_slide_fields($i, $s, $is_template = false)
 {
 	$hidden_class = empty($s['image']) ? 'wp-desa-hidden' : '';
-	?>
+?>
 	<div class="temadesa-slide-box">
 		<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
 			<h2 style="margin:0;">Slide <span class="temadesa-slide-num"><?php echo esc_html($i); ?></span></h2>
@@ -394,11 +395,11 @@ function temadesa_render_slide_fields($i, $s, $is_template = false)
 				<?php endif; ?>
 			</div>
 			<input type="hidden" class="temadesa-img-input"
-				   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][image]"
-				   value="<?php echo esc_attr($s['image']); ?>">
+				name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][image]"
+				value="<?php echo esc_attr($s['image']); ?>">
 			<div class="wp-desa-flex-gap-8" style="margin-top:var(--sp-xs);">
 				<button type="button" class="wp-desa-btn wp-desa-btn-secondary temadesa-upload-btn"
-						data-title="Slide <?php echo esc_attr($i); ?> Background">
+					data-title="Slide <?php echo esc_attr($i); ?> Background">
 					<span class="dashicons dashicons-upload"></span> Pilih Gambar
 				</button>
 				<button type="button" class="wp-desa-btn wp-desa-btn-danger temadesa-remove-img <?php echo $hidden_class; ?>">
@@ -411,17 +412,17 @@ function temadesa_render_slide_fields($i, $s, $is_template = false)
 		<div class="temadesa-field-row">
 			<label class="wp-desa-label" for="heading_<?php echo esc_attr($i); ?>">Heading</label>
 			<input type="text" class="wp-desa-input" id="heading_<?php echo esc_attr($i); ?>"
-				   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][heading]"
-				   value="<?php echo esc_attr($s['heading']); ?>"
-				   placeholder="Kosongi untuk nama desa default">
+				name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][heading]"
+				value="<?php echo esc_attr($s['heading']); ?>"
+				placeholder="Kosongi untuk nama desa default">
 		</div>
 
 		<!-- Text -->
 		<div class="temadesa-field-row">
 			<label class="wp-desa-label" for="text_<?php echo esc_attr($i); ?>">Text / Description</label>
 			<textarea class="wp-desa-textarea" id="text_<?php echo esc_attr($i); ?>" rows="3"
-					  name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][text]"
-					  placeholder="Deskripsi slide"><?php echo esc_textarea($s['text'] ?? ''); ?></textarea>
+				name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][text]"
+				placeholder="Deskripsi slide"><?php echo esc_textarea($s['text'] ?? ''); ?></textarea>
 		</div>
 
 		<!-- Buttons -->
@@ -429,32 +430,32 @@ function temadesa_render_slide_fields($i, $s, $is_template = false)
 			<div>
 				<label class="wp-desa-label">Button 1 — Text</label>
 				<input type="text" class="wp-desa-input"
-					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn1_text]"
-					   value="<?php echo esc_attr($s['btn1_text'] ?? ''); ?>"
-					   placeholder="cth: Profil Desa">
+					name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn1_text]"
+					value="<?php echo esc_attr($s['btn1_text'] ?? ''); ?>"
+					placeholder="cth: Profil Desa">
 			</div>
 			<div>
 				<label class="wp-desa-label">Button 1 — URL</label>
 				<input type="text" class="wp-desa-input"
-					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn1_url]"
-					   value="<?php echo esc_attr($s['btn1_url'] ?? ''); ?>"
-					   placeholder="cth: #profil">
+					name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn1_url]"
+					value="<?php echo esc_attr($s['btn1_url'] ?? ''); ?>"
+					placeholder="cth: #profil">
 			</div>
 			<div>
 				<label class="wp-desa-label">Button 2 — Text</label>
 				<input type="text" class="wp-desa-input"
-					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn2_text]"
-					   value="<?php echo esc_attr($s['btn2_text'] ?? ''); ?>"
-					   placeholder="cth: Layanan">
+					name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn2_text]"
+					value="<?php echo esc_attr($s['btn2_text'] ?? ''); ?>"
+					placeholder="cth: Layanan">
 			</div>
 			<div>
 				<label class="wp-desa-label">Button 2 — URL</label>
 				<input type="text" class="wp-desa-input"
-					   name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn2_url]"
-					   value="<?php echo esc_attr($s['btn2_url'] ?? ''); ?>"
-					   placeholder="cth: #layanan">
+					name="temadesa_carousel_slides[<?php echo esc_attr($i); ?>][btn2_url]"
+					value="<?php echo esc_attr($s['btn2_url'] ?? ''); ?>"
+					placeholder="cth: #layanan">
 			</div>
 		</div>
 	</div>
-	<?php
+<?php
 }

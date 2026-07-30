@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Front page / Beranda — Desa template
  *
@@ -97,46 +98,46 @@ foreach ($carousel as $i => $s) {
 get_header();
 ?>
 
-	<!-- ========== HERO CAROUSEL (clone) ========== -->
-	<section id="desaHeroCarousel" class="carousel slide desa-hero-carousel" data-bs-ride="carousel"
-			 data-bs-interval="5000" data-bs-pause="false">
-		<!-- Indicators (filled by JS) -->
-		<div class="carousel-indicators" id="desa-indicators"></div>
+<!-- ========== HERO CAROUSEL (clone) ========== -->
+<section id="desaHeroCarousel" class="carousel slide desa-hero-carousel" data-bs-ride="carousel"
+	data-bs-interval="5000" data-bs-pause="false">
+	<!-- Indicators (filled by JS) -->
+	<div class="carousel-indicators" id="desa-indicators"></div>
 
-		<!-- Carousel inner (filled by JS) -->
-		<div class="carousel-inner" id="desa-carousel-inner"></div>
+	<!-- Carousel inner (filled by JS) -->
+	<div class="carousel-inner" id="desa-carousel-inner"></div>
 
-		<!-- Slide template -->
-		<template id="desa-slide-tpl">
-			<div class="carousel-item">
-				<div class="desa-hero-slide d-flex align-items-center">
-					<div class="desa-hero-overlay"></div>
-					<div class="container position-relative text-center text-white">
-						<img class="desa-hero-logo mb-3" height="72" alt="">
-						<h1 class="desa-hero-title"></h1>
-						<p class="desa-hero-subtitle"></p>
-						<p class="desa-hero-desc lead"></p>
-						<div class="desa-hero-cta mt-4">
-							<a class="btn btn-light btn-lg me-2 desa-btn1"></a>
-							<a class="btn btn-outline-light btn-lg desa-btn2"></a>
-						</div>
+	<!-- Slide template -->
+	<template id="desa-slide-tpl">
+		<div class="carousel-item">
+			<div class="desa-hero-slide d-flex align-items-center">
+				<div class="desa-hero-overlay"></div>
+				<div class="container position-relative text-center text-white">
+					<img class="desa-hero-logo mb-3" height="72" alt="">
+					<h1 class="desa-hero-title"></h1>
+					<p class="desa-hero-subtitle"></p>
+					<p class="desa-hero-desc lead"></p>
+					<div class="desa-hero-cta mt-4">
+						<a class="btn btn-light btn-lg me-2 desa-btn1"></a>
+						<a class="btn btn-outline-light btn-lg desa-btn2"></a>
 					</div>
 				</div>
 			</div>
-		</template>
+		</div>
+	</template>
 
-		<!-- Controls -->
-		<button class="carousel-control-prev" type="button" data-bs-target="#desaHeroCarousel" data-bs-slide="prev">
-			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-			<span class="visually-hidden">Previous</span>
-		</button>
-		<button class="carousel-control-next" type="button" data-bs-target="#desaHeroCarousel" data-bs-slide="next">
-			<span class="carousel-control-next-icon" aria-hidden="true"></span>
-			<span class="visually-hidden">Next</span>
-		</button>
-	</section>
+	<!-- Controls -->
+	<button class="carousel-control-prev" type="button" data-bs-target="#desaHeroCarousel" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	</button>
+	<button class="carousel-control-next" type="button" data-bs-target="#desaHeroCarousel" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	</button>
+</section>
 
-	<script>
+<script>
 	<?php
 	// Escape slide data for JSON.
 	$json_data = wp_json_encode($slide_data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
@@ -188,11 +189,15 @@ get_header();
 			if (slide.btn1_text) {
 				btn1.textContent = slide.btn1_text;
 				btn1.href = slide.btn1_url;
-			} else { btn1.remove(); }
+			} else {
+				btn1.remove();
+			}
 			if (slide.btn2_text) {
 				btn2.textContent = slide.btn2_text;
 				btn2.href = slide.btn2_url;
-			} else { btn2.remove(); }
+			} else {
+				btn2.remove();
+			}
 		} else {
 			clone.querySelector('.desa-hero-cta').remove();
 		}
@@ -207,19 +212,33 @@ get_header();
 		if (i === 0) btn.className = 'active';
 		indicators.appendChild(btn);
 	});
-	</script>
+</script>
 
-	<!-- ========== FITUR / LAYANAN ========== -->
-	<?php temadesa_render_feature_grid(); ?>
+<!-- ========== FITUR / LAYANAN ========== -->
+<?php temadesa_render_feature_grid(); ?>
 
-	<!-- ========== STATISTIK ========== -->
-	<?php if (shortcode_exists('wp_desa_statistik')) : ?>
+<!-- ========== APARAT DESA CAROUSEL ========== -->
+<?php if (shortcode_exists('wp_desa_struktur')) : ?>
+	<section class="desa-section desa-section-aparat py-5">
+		<div class="container">
+			<div class="text-center mb-5">
+				<span class="desa-section-tag">STRUKTUR PEMERINTAHAN</span>
+				<h2 class="desa-section-title">Pemerintah Desa</h2>
+				<p class="text-muted">Perangkat pemerintah <?php echo esc_html($desa_nama); ?></p>
+			</div>
+			<?php echo do_shortcode('[wp_desa_struktur style="carousel"]'); ?>
+		</div>
+	</section>
+<?php endif; ?>
+
+<!-- ========== STATISTIK ========== -->
+<?php if (shortcode_exists('wp_desa_statistik')) : ?>
 	<section class="desa-section desa-section-stats py-5">
 		<div class="container">
 			<?php echo do_shortcode($shortcode_statistik); ?>
 		</div>
 	</section>
-	<?php else : ?>
+<?php else : ?>
 	<section class="desa-section desa-section-stats py-5">
 		<div class="container">
 			<div class="row g-4 text-center">
@@ -250,66 +269,84 @@ get_header();
 			</div>
 		</div>
 	</section>
-	<?php endif; ?>
+<?php endif; ?>
 
-	<!-- ========== WELCOME / PROFIL ========== -->
-	<section id="profil" class="desa-section desa-section-welcome py-5">
-		<div class="container">
-			<div class="row align-items-center g-5">
-				<div class="col-lg-6">
-					<span class="desa-section-tag">SELAMAT DATANG</span>
-					<h2 class="desa-section-title">
-						<?php echo esc_html($desa_nama); ?>
-					</h2>
-					<?php if ($desa_kec && $desa_kab) : ?>
-						<p class="desa-section-location text-muted mb-3">
-							Kecamatan <?php echo esc_html($desa_kec); ?>, <?php echo esc_html($desa_kab); ?>
-						</p>
-					<?php endif; ?>
-					<div class="desa-section-desc">
-						<?php if (shortcode_exists('wp_desa_profil')) : ?>
-							<?php echo do_shortcode('[wp_desa_profil]'); ?>
-						<?php else : ?>
-							<p>Selamat datang di portal resmi <?php echo esc_html($desa_nama); ?>.
+<!-- ========== WELCOME / PROFIL ========== -->
+<section id="profil" class="desa-section desa-section-welcome py-5">
+	<div class="container">
+		<div class="row align-items-center g-5">
+			<div class="col-lg-6">
+				<span class="desa-section-tag">SELAMAT DATANG</span>
+				<h2 class="desa-section-title">
+					<?php echo esc_html($desa_nama); ?>
+				</h2>
+				<?php if ($desa_kec && $desa_kab) : ?>
+					<p class="desa-section-location text-muted mb-3">
+						Kecamatan <?php echo esc_html($desa_kec); ?>, <?php echo esc_html($desa_kab); ?>
+					</p>
+				<?php endif; ?>
+				<div class="desa-section-desc">
+					<?php if (shortcode_exists('wp_desa_profil')) : ?>
+						<?php echo do_shortcode('[wp_desa_profil]'); ?>
+					<?php else : ?>
+						<p>Selamat datang di portal resmi <?php echo esc_html($desa_nama); ?>.
 							Website ini menyajikan informasi tentang pelayanan, potensi, dan pembangunan desa.</p>
-						<?php endif; ?>
-					</div>
-					<a href="<?php echo esc_url(get_permalink(get_page_by_path('profil-desa')) ?: home_url('/profil')); ?>"
-					   class="btn btn-primary mt-3">Selengkapnya &rarr;</a>
+					<?php endif; ?>
 				</div>
-				<div class="col-lg-6">
-					<div class="desa-section-image rounded-4 overflow-hidden shadow-sm">
-						<?php if (has_custom_logo()) : ?>
-							<div class="p-5 text-center bg-light">
-								<?php the_custom_logo(); ?>
-							</div>
-						<?php elseif ($desa_logo) : ?>
-							<img src="<?php echo esc_url($desa_logo); ?>"
-								 alt="<?php echo esc_attr($desa_nama); ?>"
-								 class="img-fluid p-5 bg-light">
-						<?php else : ?>
-							<div class="desa-section-placeholder d-flex align-items-center justify-content-center">
-								<span><?php echo esc_html($desa_nama); ?></span>
-							</div>
-						<?php endif; ?>
-					</div>
+				<a href="<?php echo esc_url(get_permalink(get_page_by_path('profil-desa')) ?: home_url('/profil')); ?>"
+					class="btn btn-primary mt-3">Selengkapnya &rarr;</a>
+			</div>
+			<div class="col-lg-6">
+				<div class="desa-section-image rounded-4 overflow-hidden shadow-sm">
+					<?php if (has_custom_logo()) : ?>
+						<div class="p-5 text-center bg-light">
+							<?php the_custom_logo(); ?>
+						</div>
+					<?php elseif ($desa_logo) : ?>
+						<img src="<?php echo esc_url($desa_logo); ?>"
+							alt="<?php echo esc_attr($desa_nama); ?>"
+							class="img-fluid p-5 bg-light">
+					<?php else : ?>
+						<div class="desa-section-placeholder d-flex align-items-center justify-content-center">
+							<span><?php echo esc_html($desa_nama); ?></span>
+						</div>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
-	</section>
+	</div>
+</section>
 
-	<!-- ========== LAYANAN / SERVICES ========== -->
-	<section id="layanan" class="desa-section desa-section-services py-5 bg-light">
-		<div class="container">
-			<div class="text-center mb-5">
-				<span class="desa-section-tag">LAYANAN</span>
-				<h2 class="desa-section-title">Layanan Desa</h2>
-				<p class="text-muted">Akses layanan administrasi dan informasi desa</p>
+<!-- ========== JAM KERJA ========== -->
+<section class="desa-section desa-section-jam-kerja py-5 bg-light">
+	<div class="container">
+		<div class="text-center mb-4">
+			<span class="desa-section-tag">JAM KERJA</span>
+			<h2 class="desa-section-title">Jam Kerja Kantor Desa</h2>
+			<p class="text-muted">Layanan administrasi dan pelayanan masyarakat</p>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-lg-6">
+				<div class="desa-jam-card bg-white rounded-4 shadow-sm p-4">
+					<?php echo do_shortcode('[temadesa_jam_kerja]'); ?>
+				</div>
 			</div>
+		</div>
+	</div>
+</section>
 
-			<?php if (shortcode_exists('wp_desa_layanan')) : ?>
-				<?php echo do_shortcode('[wp_desa_layanan style="grid"]'); ?>
-			<?php else : ?>
+<!-- ========== LAYANAN / SERVICES ========== -->
+<section id="layanan" class="desa-section desa-section-services py-5 bg-light">
+	<div class="container">
+		<div class="text-center mb-5">
+			<span class="desa-section-tag">LAYANAN</span>
+			<h2 class="desa-section-title">Layanan Desa</h2>
+			<p class="text-muted">Akses layanan administrasi dan informasi desa</p>
+		</div>
+
+		<?php if (shortcode_exists('wp_desa_layanan')) : ?>
+			<?php echo do_shortcode('[wp_desa_layanan style="grid"]'); ?>
+		<?php else : ?>
 			<div class="row g-4">
 				<div class="col-md-4 col-6">
 					<div class="desa-service-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
@@ -354,64 +391,65 @@ get_header();
 					</div>
 				</div>
 			</div>
-			<?php endif; ?>
-		</div>
-	</section>
+		<?php endif; ?>
+	</div>
+</section>
 
-	<!-- ========== BERITA ========== -->
-	<section class="desa-section desa-section-news py-5">
-		<div class="container">
-			<div class="d-flex justify-content-between align-items-center mb-5">
-				<div>
-					<span class="desa-section-tag">BERITA</span>
-					<h2 class="desa-section-title mb-0">Berita Desa</h2>
-				</div>
-				<a href="<?php echo esc_url(get_post_type_archive_link('post') ?: home_url('/berita')); ?>"
-				   class="btn btn-outline-primary">Lihat Semua &rarr;</a>
+<!-- ========== BERITA ========== -->
+<section class="desa-section desa-section-news py-5">
+	<div class="container">
+		<div class="d-flex justify-content-between align-items-center mb-5">
+			<div>
+				<span class="desa-section-tag">BERITA</span>
+				<h2 class="desa-section-title mb-0">Berita Desa</h2>
 			</div>
+			<a href="<?php echo esc_url(get_post_type_archive_link('post') ?: home_url('/berita')); ?>"
+				class="btn btn-outline-primary">Lihat Semua &rarr;</a>
+		</div>
 
-			<?php if (shortcode_exists('wp_desa_berita')) : ?>
-				<?php echo do_shortcode($shortcode_berita); ?>
-			<?php else : ?>
-				<?php
-				$recent = new WP_Query([
-					'post_type'      => 'post',
-					'posts_per_page' => 3,
-					'ignore_sticky_posts' => true,
-				]);
-				?>
-				<?php if ($recent->have_posts()) : ?>
+		<?php if (shortcode_exists('wp_desa_berita')) : ?>
+			<?php echo do_shortcode($shortcode_berita); ?>
+		<?php else : ?>
+			<?php
+			$recent = new WP_Query([
+				'post_type'      => 'post',
+				'posts_per_page' => 3,
+				'ignore_sticky_posts' => true,
+			]);
+			?>
+			<?php if ($recent->have_posts()) : ?>
 				<div class="row g-4">
 					<?php while ($recent->have_posts()) : $recent->the_post(); ?>
-					<div class="col-md-4">
-						<article class="desa-news-card rounded-4 overflow-hidden shadow-sm h-100 bg-white">
-							<?php if (has_post_thumbnail()) : ?>
-								<?php the_post_thumbnail('medium', ['class' => 'w-100', 'style' => 'height:200px;object-fit:cover;']); ?>
-							<?php else : ?>
-								<div class="desa-news-thumb-placeholder d-flex align-items-center justify-content-center"
-									 style="height:200px;background:var(--desa-bg-warm);color:var(--desa-text-light);">
-									<span><?php echo esc_html($desa_nama); ?></span>
+						<div class="col-md-4">
+							<article class="desa-news-card rounded-4 overflow-hidden shadow-sm h-100 bg-white">
+								<?php if (has_post_thumbnail()) : ?>
+									<?php the_post_thumbnail('medium', ['class' => 'w-100', 'style' => 'height:200px;object-fit:cover;']); ?>
+								<?php else : ?>
+									<div class="desa-news-thumb-placeholder d-flex align-items-center justify-content-center"
+										style="height:200px;background:var(--desa-bg-warm);color:var(--desa-text-light);">
+										<span><?php echo esc_html($desa_nama); ?></span>
+									</div>
+								<?php endif; ?>
+								<div class="p-3">
+									<span class="badge bg-primary mb-2"><?php echo get_the_date('d M Y'); ?></span>
+									<h5 class="desa-news-title"><?php the_title(); ?></h5>
+									<p class="small text-muted"><?php echo wp_trim_words(get_the_excerpt() ?: get_the_content(), 15); ?></p>
+									<a href="<?php the_permalink(); ?>" class="stretched-link">Baca selengkapnya</a>
 								</div>
-							<?php endif; ?>
-							<div class="p-3">
-								<span class="badge bg-primary mb-2"><?php echo get_the_date('d M Y'); ?></span>
-								<h5 class="desa-news-title"><?php the_title(); ?></h5>
-								<p class="small text-muted"><?php echo wp_trim_words(get_the_excerpt() ?: get_the_content(), 15); ?></p>
-								<a href="<?php the_permalink(); ?>" class="stretched-link">Baca selengkapnya</a>
-							</div>
-						</article>
-					</div>
-					<?php endwhile; wp_reset_postdata(); ?>
+							</article>
+						</div>
+					<?php endwhile;
+					wp_reset_postdata(); ?>
 				</div>
-				<?php else : ?>
+			<?php else : ?>
 				<p class="text-muted">Belum ada berita.</p>
-				<?php endif; ?>
 			<?php endif; ?>
-		</div>
-	</section>
+		<?php endif; ?>
+	</div>
+</section>
 
-	<!-- ========== KEPALA DESA ========== -->
-	<?php if ($desa_kades || shortcode_exists('wp_desa_kepala_desa')) : ?>
+<!-- ========== KEPALA DESA ========== -->
+<?php if ($desa_kades || shortcode_exists('wp_desa_kepala_desa')) : ?>
 	<section class="desa-section desa-section-kades py-5 bg-primary text-white">
 		<div class="container text-center">
 			<span class="desa-section-tag text-white-50">PEMERINTAH DESA</span>
@@ -420,28 +458,28 @@ get_header();
 			<?php if (shortcode_exists('wp_desa_kepala_desa')) : ?>
 				<?php echo do_shortcode('[wp_desa_kepala_desa]'); ?>
 			<?php else : ?>
-			<div class="row justify-content-center mt-4">
-				<div class="col-md-6 col-lg-4">
-					<div class="desa-kades-card">
-						<?php if ($desa_foto_kades) : ?>
-							<img src="<?php echo esc_url($desa_foto_kades); ?>"
-								 alt="<?php echo esc_attr($desa_kades); ?>"
-								 class="rounded-circle shadow mb-3"
-								 width="150" height="150"
-								 style="object-fit:cover;border:4px solid rgba(255,255,255,0.3);">
-						<?php endif; ?>
-						<h4 class="text-white mb-1"><?php echo esc_html($desa_kades); ?></h4>
-						<p class="text-white-50 mb-0">Kepala Desa <?php echo esc_html($desa_nama); ?></p>
+				<div class="row justify-content-center mt-4">
+					<div class="col-md-6 col-lg-4">
+						<div class="desa-kades-card">
+							<?php if ($desa_foto_kades) : ?>
+								<img src="<?php echo esc_url($desa_foto_kades); ?>"
+									alt="<?php echo esc_attr($desa_kades); ?>"
+									class="rounded-circle shadow mb-3"
+									width="150" height="150"
+									style="object-fit:cover;border:4px solid rgba(255,255,255,0.3);">
+							<?php endif; ?>
+							<h4 class="text-white mb-1"><?php echo esc_html($desa_kades); ?></h4>
+							<p class="text-white-50 mb-0">Kepala Desa <?php echo esc_html($desa_nama); ?></p>
+						</div>
 					</div>
 				</div>
-			</div>
 			<?php endif; ?>
 		</div>
 	</section>
-	<?php endif; ?>
+<?php endif; ?>
 
-	<!-- ========== PETA / LOKASI ========== -->
-	<?php if (shortcode_exists('wp_desa_peta')) : ?>
+<!-- ========== PETA / LOKASI ========== -->
+<?php if (shortcode_exists('wp_desa_peta')) : ?>
 	<section class="desa-section desa-section-map py-5">
 		<div class="container">
 			<div class="text-center mb-5">
@@ -451,7 +489,7 @@ get_header();
 			<?php echo do_shortcode('[wp_desa_peta]'); ?>
 		</div>
 	</section>
-	<?php endif; ?>
+<?php endif; ?>
 
 <?php
 get_footer();
