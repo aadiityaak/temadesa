@@ -231,45 +231,17 @@ get_header();
 	</section>
 <?php endif; ?>
 
-<!-- ========== STATISTIK ========== -->
-<?php if (shortcode_exists('wp_desa_statistik')) : ?>
-	<section class="desa-section desa-section-stats py-5">
-		<div class="container">
-			<?php echo do_shortcode($shortcode_statistik); ?>
+<!-- ========== RINGKASAN ========== -->
+<section class="desa-section desa-section-ringkasan py-5 bg-light">
+	<div class="container">
+		<div class="text-center mb-5">
+			<span class="desa-section-tag">LAYANAN DESA</span>
+			<h2 class="desa-section-title">Informasi Pelayanan Desa</h2>
+			<p class="text-muted">Informasi jam kerja, statistik penduduk, dan laporan keuangan <?php echo esc_html($desa_nama); ?></p>
 		</div>
-	</section>
-<?php else : ?>
-	<section class="desa-section desa-section-stats py-5">
-		<div class="container">
-			<div class="row g-4 text-center">
-				<div class="col-6 col-md-3">
-					<div class="desa-stat-card">
-						<div class="desa-stat-number">--</div>
-						<div class="desa-stat-label">Jumlah Penduduk</div>
-					</div>
-				</div>
-				<div class="col-6 col-md-3">
-					<div class="desa-stat-card">
-						<div class="desa-stat-number">--</div>
-						<div class="desa-stat-label">Luas Wilayah</div>
-					</div>
-				</div>
-				<div class="col-6 col-md-3">
-					<div class="desa-stat-card">
-						<div class="desa-stat-number">--</div>
-						<div class="desa-stat-label">Dusun</div>
-					</div>
-				</div>
-				<div class="col-6 col-md-3">
-					<div class="desa-stat-card">
-						<div class="desa-stat-number">--</div>
-						<div class="desa-stat-label">RT / RW</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-<?php endif; ?>
+		<?php echo do_shortcode('[wp_desa_ringkasan]'); ?>
+	</div>
+</section>
 
 <!-- ========== WELCOME / PROFIL ========== -->
 <section id="profil" class="desa-section desa-section-welcome py-5">
@@ -311,24 +283,6 @@ get_header();
 							<span><?php echo esc_html($desa_nama); ?></span>
 						</div>
 					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- ========== JAM KERJA ========== -->
-<section class="desa-section desa-section-jam-kerja py-5 bg-light">
-	<div class="container">
-		<div class="text-center mb-4">
-			<span class="desa-section-tag">JAM KERJA</span>
-			<h2 class="desa-section-title">Jam Kerja Kantor Desa</h2>
-			<p class="text-muted">Layanan administrasi dan pelayanan masyarakat</p>
-		</div>
-		<div class="row justify-content-center">
-			<div class="col-lg-6">
-				<div class="desa-jam-card bg-white rounded-4 shadow-sm p-4">
-					<?php echo do_shortcode('[temadesa_jam_kerja]'); ?>
 				</div>
 			</div>
 		</div>
