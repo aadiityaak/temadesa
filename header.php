@@ -12,6 +12,11 @@ $desa_nama    = !empty($wsdesa['nama_desa']) ? $wsdesa['nama_desa'] : get_blogin
 $desa_logo    = !empty($wsdesa['logo_kabupaten']) ? $wsdesa['logo_kabupaten'] : '';
 $desa_kec     = !empty($wsdesa['nama_kecamatan']) ? $wsdesa['nama_kecamatan'] : '';
 $desa_kab     = !empty($wsdesa['nama_kabupaten']) ? $wsdesa['nama_kabupaten'] : '';
+
+// WhatsApp number from plugin settings (telepon_desa) — 0 → 62.
+$desa_wa = !empty($wsdesa['telepon_desa'])
+	? preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $wsdesa['telepon_desa']))
+	: '';
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -84,6 +89,7 @@ $desa_kab     = !empty($wsdesa['nama_kabupaten']) ? $wsdesa['nama_kabupaten'] : 
 					'menu_class'     => 'desa-nav',
 					'fallback_cb'    => false,
 					'depth'          => 3,
+					'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s<li class="nav-item dropdown desa-more-menu d-none"><a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">' . esc_html__('Lainnya', 'temadesa') . '</a><ul class="dropdown-menu dropdown-menu-end"></ul></li></ul>',
 				);
 				if (class_exists('wsbase_WP_Bootstrap_Navwalker')) {
 					$nav_args['walker'] = new wsbase_WP_Bootstrap_Navwalker();
@@ -92,8 +98,10 @@ $desa_kab     = !empty($wsdesa['nama_kabupaten']) ? $wsdesa['nama_kabupaten'] : 
 				?>
 
 				<div class="desa-nav-actions">
-					<a href="<?php echo esc_url(get_permalink(get_page_by_path('layanan')) ?: home_url('/layanan')); ?>"
-					   class="desa-btn desa-btn-primary">Layanan</a>
+					<?php if ($desa_wa) : ?>
+						<a href="https://wa.me/<?php echo esc_attr($desa_wa); ?>" target="_blank" rel="noopener"
+						   class="desa-btn desa-btn-primary"><?php esc_html_e('WhatsApp', 'temadesa'); ?></a>
+					<?php endif; ?>
 				</div>
 			</div>
 
@@ -125,9 +133,11 @@ $desa_kab     = !empty($wsdesa['nama_kabupaten']) ? $wsdesa['nama_kabupaten'] : 
 				'depth'          => 3,
 			));
 			?>
-			<div class="mt-4">
-				<a href="<?php echo esc_url(get_permalink(get_page_by_path('layanan')) ?: home_url('/layanan')); ?>"
-				   class="desa-btn desa-btn-primary d-block text-center">Layanan</a>
-			</div>
+			<?php if ($desa_wa) : ?>
+				<div class="mt-4">
+					<a href="https://wa.me/<?php echo esc_attr($desa_wa); ?>" target="_blank" rel="noopener"
+					   class="desa-btn desa-btn-primary d-block text-center"><?php esc_html_e('WhatsApp', 'temadesa'); ?></a>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>

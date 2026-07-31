@@ -31,6 +31,9 @@
   --desa-on-dark: #ffffff;
   --desa-on-dark-soft: #a1a1aa;
   --desa-muted-soft: #898989;
+
+  /* Plugin wp-desa token yang tidak didefinisikan (fallback kontras) */
+  --on-primary: #ffffff;
 }
 
 /* --- Top Bar --- */
@@ -114,6 +117,7 @@
   align-items: center;
   gap: var(--desa-spacing-sm, 0.75rem);
   margin-left: auto;
+  min-width: 0; /* allow shrink below content until JS moves overflow items */
 }
 
 /* Desktop nav links */
@@ -154,6 +158,23 @@
   background: var(--desa-surface-soft, #f8f9fa);
   color: var(--desa-ink, #111111) !important;
   font-weight: 600;
+}
+
+/* "Lainnya" overflow dropdown */
+.desa-nav .dropdown-menu > li {
+  position: relative;
+}
+.desa-nav .desa-more-item > a.dropdown-item {
+  font-weight: 500;
+}
+.desa-nav .desa-more-item > a.dropdown-item.dropdown-toggle::after {
+  float: right;
+  margin-top: 0.4em;
+  transform: rotate(-90deg);
+}
+.desa-nav .desa-more-item .dropdown-menu {
+  left: 100%;
+  top: 0;
 }
 
 /* CTA button group */
@@ -467,6 +488,97 @@
   font-size: 2rem;
   font-weight: 600;
   color: var(--desa-text);
+}
+
+/* --- Page hero (title + breadcrumb) --- */
+.desa-page-hero {
+  background: linear-gradient(
+    135deg,
+    var(--desa-primary-dark, #0e3191) 0%,
+    var(--desa-primary, #024ad8) 60%,
+    #1a5a9e 100%
+  );
+  color: #ffffff;
+  padding: 3.5rem 0 3rem;
+}
+.desa-page-hero .desa-breadcrumb-list {
+  font-size: 0.8125rem;
+  margin-bottom: 1.25rem;
+  --bs-breadcrumb-divider-color: rgba(255, 255, 255, 0.4);
+}
+.desa-page-hero .breadcrumb-item a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+.desa-page-hero .breadcrumb-item a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+.desa-page-hero .breadcrumb-item.active {
+  color: rgba(255, 255, 255, 0.6);
+}
+.desa-page-hero-title {
+  font-family: var(--desa-font-display);
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+.desa-page-hero-desc {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.0625rem;
+  max-width: 42rem;
+  margin-bottom: 0;
+}
+@media (max-width: 767.98px) {
+  .desa-page-hero {
+    padding: 2.25rem 0 2rem;
+  }
+  .desa-page-hero-title {
+    font-size: 1.75rem;
+  }
+}
+
+/* --- Single Berita --- */
+.desa-single-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 1rem;
+}
+.desa-single-cat {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 500;
+}
+.desa-single-container .entry-content {
+  max-width: 46rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+/* --- Single Galeri --- */
+.desa-galeri-item img {
+  transition: transform 0.3s ease;
+}
+.desa-galeri-item:hover img {
+  transform: scale(1.05);
+}
+.desa-galeri-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  font-size: 2rem;
+  pointer-events: none;
 }
 
 /* Sidebar */
