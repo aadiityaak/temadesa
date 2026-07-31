@@ -49,6 +49,25 @@ function temadesa_enqueue_desa_styles()
 }
 
 /**
+ * Enqueue nav overflow handler (footer).
+ */
+add_action('wp_enqueue_scripts', 'temadesa_enqueue_nav_js', 40);
+function temadesa_enqueue_nav_js()
+{
+	$js_path = get_stylesheet_directory() . '/js/desa-nav.js';
+	$js_url  = get_stylesheet_directory_uri() . '/js/desa-nav.js';
+	$version = file_exists($js_path) ? filemtime($js_path) : wp_get_theme()->get('Version');
+
+	wp_enqueue_script(
+		'temadesa-nav',
+		$js_url,
+		array(),
+		$version,
+		true
+	);
+}
+
+/**
  * Theme setup.
  */
 add_action('after_setup_theme', 'temadesa_setup');
@@ -82,6 +101,42 @@ add_action('init', function () {
 		remove_action('wsbase_site_info', 'wsbase_add_site_info');
 	}
 });
+/**
+ * Breadcrumb for desa pages — Beranda / ancestors / current.
+ */
+function temadesa_breadcrumb($post = null)
+{
+	if (!$post) {
+		$post = get_queried_object();
+	}
+
+	$html = '<nav class="desa-breadcrumb" aria-label="' . esc_attr__('Breadcrumb', 'temadesa') . '">'
+		. '<ol class="breadcrumb desa-breadcrumb-list mb-0">'
+		. '<li class="breadcrumb-item"><a href="' . esc_url(home_url('/')) . '">' . esc_html__('Beranda', 'temadesa') . '</a></li>';
+
+	if ($post instanceof WP_Post && is_page($post)) {
+		foreach (array_reverse(get_post_ancestors($post->ID)) as $anc_id) {
+			$html .= '<li class="breadcrumb-item"><a href="' . esc_url(get_permalink($anc_id)) . '">'
+				. esc_html(get_the_title($anc_id)) . '</a></li>';
+		}
+		$html .= '<li class="breadcrumb-item active" aria-current="page">'
+			. esc_html(get_the_title($post->ID)) . '</li>';
+	} elseif (is_home()) {
+		$posts_page = get_option('page_for_posts');
+		if ($posts_page) {
+			$html .= '<li class="breadcrumb-item active" aria-current="page">'
+				. esc_html(get_the_title($posts_page)) . '</li>';
+		}
+	} elseif ($post instanceof WP_Post) {
+		$html .= '<li class="breadcrumb-item active" aria-current="page">'
+			. esc_html(get_the_title($post)) . '</li>';
+	}
+
+	$html .= '</ol></nav>';
+
+	echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
 add_action('wsbase_site_info', 'temadesa_site_info');
 function temadesa_site_info()
 {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The template for displaying all pages - Desa layout
  *
@@ -11,43 +12,41 @@
 defined('ABSPATH') || exit;
 
 get_header();
+
+$desa_page = get_queried_object();
 ?>
+
+<!-- Page Hero — title + breadcrumb -->
+<?php if ($desa_page instanceof WP_Post) : ?>
+	<section class="desa-page-hero">
+		<div class="container">
+			<?php temadesa_breadcrumb($desa_page); ?>
+			<h1 class="desa-page-hero-title"><?php echo esc_html(get_the_title($desa_page)); ?></h1>
+			<?php if (has_excerpt($desa_page)) : ?>
+				<p class="desa-page-hero-desc"><?php echo esc_html(get_the_excerpt($desa_page)); ?></p>
+			<?php endif; ?>
+		</div>
+	</section>
+<?php endif; ?>
 
 <div class="wrapper desa-page-wrapper" id="page-wrapper">
 	<div class="container" id="content" tabindex="-1">
 		<div class="row">
 
-			<!-- Sidebar Kiri (Profil, Statistik, Widget) -->
-			<aside class="col-lg-4 col-12 desa-page-sidebar order-2 order-lg-1" id="desa-sidebar">
-				<?php if (is_active_sidebar('left-sidebar')) : ?>
+			<!-- Sidebar Kiri (hanya jika ada widget) -->
+			<?php if (is_active_sidebar('left-sidebar')) : ?>
+				<aside class="col-lg-4 col-12 desa-page-sidebar order-2 order-lg-1" id="desa-sidebar">
 					<?php dynamic_sidebar('left-sidebar'); ?>
-				<?php else : ?>
-					<div class="desa-sidebar-default">
-						<div class="card border-0 mb-4">
-							<div class="card-body">
-								<h5 class="card-title"><?php bloginfo('name'); ?></h5>
-								<p class="card-text small text-muted">
-									<?php echo esc_html(get_bloginfo('description')); ?>
-								</p>
-							</div>
-						</div>
-					</div>
-				<?php endif; ?>
-			</aside>
+				</aside>
+			<?php endif; ?>
 
 			<!-- Konten Utama -->
-			<main class="site-main col-lg-8 col-12 order-1 order-lg-2" id="main">
+			<main class="site-main col-lg-<?php echo is_active_sidebar('left-sidebar') ? '8' : '12'; ?> col-12 order-1" id="main">
 				<?php
 				while (have_posts()) {
 					the_post();
-					?>
+				?>
 					<article <?php post_class('desa-page-content'); ?> id="post-<?php the_ID(); ?>">
-						<?php if (!is_front_page()) : ?>
-							<header class="entry-header mb-4">
-								<?php the_title('<h1 class="entry-title desa-page-title">', '</h1>'); ?>
-							</header>
-						<?php endif; ?>
-
 						<div class="entry-content">
 							<?php the_content(); ?>
 						</div>
@@ -65,7 +64,7 @@ get_header();
 							</div>
 						<?php endif; ?>
 					</article>
-					<?php
+				<?php
 				}
 				?>
 			</main>
