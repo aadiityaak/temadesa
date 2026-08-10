@@ -63,6 +63,11 @@
   font-size: 0.75rem;
 }
 
+/* Offcanvas tema harus di atas backdrop wsbase (z-index 100000). */
+#desaOffcanvasNav {
+  --bs-offcanvas-zindex: 100001;
+}
+
 /* --- Navbar: design system --- */
 .desa-navbar {
   background: var(--desa-canvas, #ffffff);
@@ -223,7 +228,6 @@
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   padding: 0.375rem 0;
-  margin-top: 4px;
   display: none;
   border-top: 1px solid var(--desa-hairline, #e5e7eb);
 }
@@ -247,23 +251,16 @@
   .desa-nav .dropdown:hover > .dropdown-menu {
     display: block;
   }
-  /* Bridge — keep :hover alive while crossing the gap to the submenu. */
+  /* Level 1 — menu menempel item, tanpa gap, tak perlu bridge. */
   .desa-nav .dropdown > .dropdown-menu {
     top: 100%;
-  }
-  .desa-nav .dropdown::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    height: 4px; /* matches .dropdown-menu margin-top */
   }
   .desa-nav .dropdown-menu .dropdown-menu {
     left: 100%;
     top: -0.375rem;
     margin-left: 2px;
   }
+  /* Bridge untuk flyout bertingkat (celah margin-left 2px). */
   .desa-nav .dropdown-menu .dropdown::after {
     top: 0;
     bottom: 0;
