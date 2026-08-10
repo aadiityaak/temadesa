@@ -247,10 +247,30 @@
   .desa-nav .dropdown:hover > .dropdown-menu {
     display: block;
   }
+  /* Bridge — keep :hover alive while crossing the gap to the submenu. */
+  .desa-nav .dropdown > .dropdown-menu {
+    top: 100%;
+  }
+  .desa-nav .dropdown::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 4px; /* matches .dropdown-menu margin-top */
+  }
   .desa-nav .dropdown-menu .dropdown-menu {
     left: 100%;
     top: -0.375rem;
     margin-left: 2px;
+  }
+  .desa-nav .dropdown-menu .dropdown::after {
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    right: auto;
+    width: 2px; /* matches nested margin-left */
+    height: auto;
   }
   .desa-nav .dropdown-toggle::after {
     display: inline-block;
@@ -391,9 +411,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  columns: 2; /* Menu Cepat — 2 kolom */
+  column-gap: 1.5rem;
 }
 .desa-footer-menu li {
   margin-bottom: 0.375rem;
+  break-inside: avoid;
 }
 .desa-footer-menu a {
   color: var(--desa-on-dark-soft, #a1a1aa);
@@ -560,6 +583,12 @@
   max-width: 46rem;
   font-size: 1.0625rem;
   line-height: 1.75;
+}
+
+/* Ringkasan keuangan — canvas grafik */
+.wp-desa-ringkasan-card .wp-desa-ringkasan-card-body canvas {
+  width: 100% !important;
+  max-height: 220px;
 }
 
 /* --- Single Galeri --- */
@@ -1081,6 +1110,17 @@
 .desa-jam-card {
   background: #fff;
   border: 1px solid var(--desa-hairline, #e5e7eb);
+}
+
+/* Wrap hasil shortcode [wp_desa_jam_kerja] jadi kartu */
+.desa-jam-container {
+  background: #ffffff;
+  border: 1px solid var(--desa-hairline, #e5e7eb);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  max-width: 480px;
+  margin: 2rem auto;
 }
 .desa-jam-table {
   width: 100%;

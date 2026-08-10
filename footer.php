@@ -26,7 +26,7 @@ $desa_telepon = !empty($wsdesa['telepon_desa']) ? $wsdesa['telepon_desa'] : '';
 				<div class="row g-4">
 
 					<!-- Column 1: Profil Desa -->
-					<div class="col-lg-4 col-md-6">
+					<div class="col-lg-3 col-md-6">
 						<div class="desa-footer-brand">
 							<?php if ($desa_logo) : ?>
 								<div class="footer-logo mb-3">
@@ -58,7 +58,7 @@ $desa_telepon = !empty($wsdesa['telepon_desa']) ? $wsdesa['telepon_desa'] : '';
 					</div>
 
 					<!-- Column 2: Menu Cepat -->
-					<div class="col-lg-4 col-md-6">
+					<div class="col-lg-5 col-md-6">
 						<h5 class="desa-footer-heading mb-3">Menu Cepat</h5>
 						<?php
 						if (has_nav_menu('footer')) :
@@ -82,7 +82,7 @@ $desa_telepon = !empty($wsdesa['telepon_desa']) ? $wsdesa['telepon_desa'] : '';
 					</div>
 
 					<!-- Column 3: Kontak Desa -->
-					<div class="col-lg-4 col-md-12">
+					<div class="col-lg-4 col-md-6">
 						<h5 class="desa-footer-heading mb-3">Kontak Desa</h5>
 						<ul class="desa-footer-contact list-unstyled small">
 							<li class="mb-2 d-flex align-items-start gap-2">
